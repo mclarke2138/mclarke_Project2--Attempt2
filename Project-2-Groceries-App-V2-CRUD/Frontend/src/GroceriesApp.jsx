@@ -5,8 +5,7 @@ import { useState, useEffect} from "react";
 import axios from "axios"
 
 export default function GroceriesApp() {
-
-
+  // State variables
   const [cartList, setCartList] = useState([]);
   const [products, setProducts] = useState([])
   const [resData, setResData] = useState("")
@@ -20,6 +19,7 @@ export default function GroceriesApp() {
     price:""
   })
 
+  // Placeholder object
   const emptyProduct={
     id:"",
     productName: "",
@@ -27,8 +27,9 @@ export default function GroceriesApp() {
     quantity:"",
     image:"",
     price:""
-}
+  }
 
+  // Event handler for input changes in the form
   const handleOnChange = (evt) =>{
     const fieldName = evt.target.name
     const fieldValue = evt.target.value
@@ -40,6 +41,8 @@ export default function GroceriesApp() {
         }
     })
   }
+
+  // Fetch products from the server when resData changes
   useEffect(()=>{
     handleGetProducts()
   },[resData])
@@ -50,6 +53,7 @@ export default function GroceriesApp() {
     })
   }
 
+  // Function to post new products to the server
   const handlePostProducts = async(product)=>{
     const postProduct = {
         id: product.id,
@@ -62,12 +66,15 @@ export default function GroceriesApp() {
     await axios.post("http://localhost:3000/addProduct",postProduct)
     .then(response => setResData(<p>{response.data}</p>))
   }
+
+  // Form submission handler for adding/editing
   const handleOnSubmit= (evt) =>{
     evt.preventDefault;
     toggleEdit ? handleProductEdit(formData) : handlePostProducts(formData)
     setFormData(emptyProduct)
   }
 
+  // Function to handle editing
   const handleProductEdit = async(product)=>{
     const id = product._id
     const editData = {
@@ -83,11 +90,13 @@ export default function GroceriesApp() {
     .then(setToggleEdit(false))
   }
 
+  // Function to toggle edit
   const handleToggleEdit = (product) =>{
     setFormData(product)
     setToggleEdit(true)
   }
 
+  // Function to handle delete
   const handleProductDelete = async(product) =>{
     const id = product._id
     const productName= product.productName
@@ -114,20 +123,23 @@ export default function GroceriesApp() {
   return (
     <>
       <h1>Groceries App</h1>
+      {/* InventoryForm component for adding/editing products */}
       <InventoryForm 
         formData={formData} 
         handleOnChange = {handleOnChange} 
         handleOnSubmit = {handleOnSubmit}
         editValue={toggleEdit} 
-        />
+      />
       {resData}
       <div className="GroceriesApp-Container">
+        {/* InventoryCard component for displaying and managing products */}
         <InventoryCard 
             list={products} 
             onClick={handleAddToCart} 
             onDelete={handleProductDelete}
             handleToggleEdit={handleToggleEdit}
-            />
+        />
+        {/* CartList component for displaying and managing the shopping cart */}
         <CartList
           cartList={cartList}
           onClickEmpty={handleEmptyCart}

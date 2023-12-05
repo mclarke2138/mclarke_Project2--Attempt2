@@ -12,7 +12,9 @@ export default function InventoryCard({ onDelete, list, onClick, handleToggleEdi
           </p>
             <button onClick={() => onClick(l)}>Add to cart</button>
           <div>
+            {/*button to handle delete*/}
             <button onClick={()=> onDelete(l)}>Delete</button>
+            {/*button to handle edit*/}
             <button onClick={()=> handleToggleEdit(l)}>Edit</button>
           </div>
             
